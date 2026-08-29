@@ -1,3 +1,5 @@
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata, Viewport } from 'next';
 import { Archivo } from 'next/font/google';
 
@@ -25,7 +27,18 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={archivo.variable}>
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        {children}
+        {/*
+          Both are first-party and cookieless, so no consent banner is needed.
+          Speed Insights is the one that earns its place here: this app's cost
+          is CPU-bound conversion work, which varies enormously between a
+          laptop and a phone, so real Core Web Vitals from actual visitors say
+          far more than any number measured on one machine.
+        */}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
