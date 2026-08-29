@@ -3,6 +3,8 @@
 Turn a photo or your webcam into ASCII art. Everything runs in the browser —
 no upload, no server, no account.
 
+**Live: [ascii-lens.vercel.app](https://ascii-lens.vercel.app)**
+
 ![ASCII-Lens converting a photograph](docs/screenshot.png)
 
 - **Three conversion engines.** A luminance ramp, a shape matcher that compares
@@ -209,7 +211,8 @@ The first run failed six checks, all real:
   and leaves the user pinching to get back. Now 16px on touch.
 - **The control bar was 450px tall against a 664px viewport**, pushing the
   picture entirely below the fold — you would land on controls rather than on
-  your image. On touch it collapses to one row (width + "Adjust").
+  your image. On touch it collapses to one row (the resolution presets plus
+  "Adjust").
 
 Also addressed, from reading rather than a failing check:
 

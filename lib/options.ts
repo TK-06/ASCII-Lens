@@ -91,3 +91,30 @@ export const COLOR_CHOICES = [
   { value: 'solid' as const, label: 'Mosaic' },
   { value: 'normalized' as const, label: 'Vivid' },
 ];
+
+/**
+ * One-tap resolution steps.
+ *
+ * Mode-aware because the ceilings differ: "Max" should always mean the real
+ * limit of the mode you are actually in, not a number that only one of them
+ * can reach. The slider stays free between and around these, so a preset is a
+ * shortcut rather than a constraint — and nothing highlights when the value
+ * sits between two steps, which is how the row says "custom".
+ */
+export const RESOLUTION_PRESETS: Record<
+  Mode,
+  readonly { value: number; label: string }[]
+> = {
+  upload: [
+    { value: 60, label: 'Low' },
+    { value: 120, label: 'Med' },
+    { value: 200, label: 'High' },
+    { value: MAX_COLS.upload, label: 'Max' },
+  ],
+  webcam: [
+    { value: 45, label: 'Low' },
+    { value: 90, label: 'Med' },
+    { value: 140, label: 'High' },
+    { value: MAX_COLS.webcam, label: 'Max' },
+  ],
+};

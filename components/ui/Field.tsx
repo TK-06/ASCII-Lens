@@ -2,7 +2,7 @@
 
 import { useId } from 'react';
 
-const LABEL = 'text-[9.5px] font-bold uppercase tracking-[0.11em] text-muted';
+export const FIELD_LABEL = 'text-[9.5px] font-bold uppercase tracking-[0.11em] text-muted';
 
 /** A labelled range. The number is part of the label so it never needs a tooltip. */
 export function Slider({
@@ -27,7 +27,7 @@ export function Slider({
   const id = useId();
   return (
     <div className="flex min-w-[132px] flex-col gap-[3px]">
-      <label htmlFor={id} className={`${LABEL} flex justify-between gap-2`}>
+      <label htmlFor={id} className={`${FIELD_LABEL} flex justify-between gap-2`}>
         <span>{label}</span>
         <span className="text-ink tabular-nums">{format(value)}</span>
       </label>
@@ -61,7 +61,7 @@ export function Choice<T extends string>({
   const id = useId();
   return (
     <div className="flex flex-col gap-[3px]">
-      <label htmlFor={id} className={LABEL}>
+      <label htmlFor={id} className={FIELD_LABEL}>
         {label}
       </label>
       <select
@@ -125,5 +125,62 @@ export function Toggle({
       />
       {label}
     </button>
+  );
+}
+
+/**
+ * A row of mutually exclusive values, printed as one block.
+ *
+ * Same construction as the mode tabs — a single keyline around the group with
+ * rules between the cells — so the set reads as one object rather than as a
+ * huddle of separate buttons. Nothing is selected when the current value falls
+ * outside the set; that absence is the "custom" state, and it is deliberate:
+ * lighting up the nearest step would claim a precision the value does not have.
+ *
+ * Coarse pointers get 44px cells from the global button rule in globals.css.
+ */
+export function Segmented<T extends string | number>({
+  ariaLabel,
+  value,
+  options,
+  disabled,
+  onChange,
+}: {
+  ariaLabel: string;
+  value: T;
+  options: readonly { value: T; label: string }[];
+  disabled?: boolean;
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={ariaLabel}
+      className="keyline flex bg-field"
+    >
+      {options.map((option, i) => {
+        const active = option.value === value;
+        return (
+          <button
+            key={String(option.value)}
+            type="button"
+            aria-pressed={active}
+            disabled={disabled}
+            onClick={() => onChange(option.value)}
+            className={[
+              'min-w-0 flex-1 px-2 py-[4px] transition-none',
+              'text-[10px] font-bold uppercase tracking-[0.08em]',
+              'disabled:cursor-not-allowed disabled:opacity-40',
+              i > 0 ? 'border-l-[2.5px] border-ink' : '',
+              // Named explicitly so :hover cannot win at equal specificity and
+              // silently strip the selected cell's fill.
+              active ? 'bg-ink text-paper hover:bg-ink' : 'text-muted hover:bg-stage',
+            ].join(' ')}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }
