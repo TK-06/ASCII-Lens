@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ASCII-Lens playground</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">ASCII<span>-Lens</span> <em>playground</em></div>
+      <nav class="modes" role="tablist" aria-label="Input mode">
+        <button id="mode-upload" role="tab" aria-selected="true" class="active">Upload Photo</button>
+        <button id="mode-webcam" role="tab" aria-selected="false">Webcam Mode</button>
+      </nav>
+      <div class="hud" id="hud" aria-live="off">ready</div>
+    </header>
+
+    <main>
+      <aside class="panel" aria-label="Controls">
+        <section id="upload-controls">
+          <h2>Source</h2>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button"
+               aria-label="Drop an image here or click to choose a file">
+            <strong>Drop an image</strong>
+            <span>or click to choose &middot; paste also works</span>
+          </div>
+          <input type="file" id="file" accept="image/*" hidden />
+          <div class="sourceinfo" id="sourceinfo">no image loaded</div>
+        </section>
+
+        <section id="webcam-controls" hidden>
+          <h2>Camera</h2>
+          <button class="wide" id="cam-start">Start camera</button>
+          <button class="wide" id="cam-stop" disabled>Stop camera</button>
+          <label class="check"><input type="checkbox" id="mirror" checked /> Mirror preview</label>
+          <div class="sourceinfo" id="caminfo">camera off</div>
+        </section>
+
+        <h2>Geometry</h2>
+        <label class="row">
+          <span>Width <b id="v-cols">120</b> chars</span>
+          <input type="range" id="cols" min="20" max="300" step="1" value="120" />
+        </label>
+        <label class="row">
+          <span>Char aspect <b id="v-aspect">0.55</b></span>
+          <input type="range" id="aspect" min="0.3" max="1" step="0.01" value="0.55" />
+        </label>
+        <label class="row">
+          <span>Font size <b id="v-font">10</b> px</span>
+          <input type="range" id="font" min="4" max="24" step="1" value="10" />
+        </label>
+
+        <h2>Tone</h2>
+        <label class="row">
+          <span>Ramp</span>
+          <select id="ramp">
+            <option value="simple">simple</option>
+            <option value="detailed">detailed</option>
+            <option value="blocks" selected>blocks</option>
+            <option value="custom">custom&hellip;</option>
+          </select>
+        </label>
+        <label class="row" id="custom-row" hidden>
+          <span>Custom ramp (dark &rarr; light)</span>
+          <input type="text" id="customramp" value=" .:-=+*#%@" spellcheck="false" />
+        </label>
+        <label class="row">
+          <span>Gamma <b id="v-gamma">1.00</b></span>
+          <input type="range" id="gamma" min="0.3" max="2.5" step="0.05" value="1" />
+        </label>
+        <label class="row">
+          <span>Clip <b id="v-clip">0.010</b></span>
+          <input type="range" id="clip" min="0" max="0.1" step="0.005" value="0.01" />
+        </label>
+        <label class="check"><input type="checkbox" id="autolevels" checked /> Auto-levels</label>
+        <label class="check"><input type="checkbox" id="invert" /> Invert ramp</label>
+
+        <h2>Effects</h2>
+        <label class="check"><input type="checkbox" id="color" /> Colour</label>
+        <label class="check"><input type="checkbox" id="dither" /> Dither</label>
+        <label class="check"><input type="checkbox" id="edges" /> Edge strokes</label>
+        <label class="row">
+          <span>Edge threshold <b id="v-edge">0.50</b></span>
+          <input type="range" id="edge" min="0.05" max="0.95" step="0.05" value="0.5" />
+        </label>
+
+        <h2>Renderer</h2>
+        <div class="seg" role="radiogroup" aria-label="Renderer">
+          <button id="r-canvas" class="active" role="radio" aria-checked="true">Canvas</button>
+          <button id="r-dom" role="radio" aria-checked="false">DOM &lt;pre&gt;</button>
+        </div>
+        <p class="note">Phase&nbsp;1 showed conversion costs ~1.4&nbsp;ms. This toggle
+          measures what <em>rendering</em> costs, which is the real budget question
+          for webcam colour.</p>
+
+        <h2>Export</h2>
+        <div class="btns">
+          <button id="copy">Copy text</button>
+          <button id="dl-txt">.txt</button>
+          <button id="dl-png">.png</button>
+        </div>
+        <button class="wide" id="reset">Reset controls</button>
+      </aside>
+
+      <section class="stage" id="stage">
+        <div class="out" id="out">
+          <canvas id="canvas" hidden></canvas>
+          <pre id="pre" hidden></pre>
+          <div class="empty" id="empty">
+            <p>Load an image or start the camera.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <video id="video" playsinline muted hidden></video>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

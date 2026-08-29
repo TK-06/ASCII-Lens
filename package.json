@@ -1,0 +1,46 @@
+{
+  "name": "ascii-lens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Turn a photo or your webcam into ASCII art, entirely in the browser.",
+  "scripts": {
+    "ascii": "tsx cli/render.ts",
+    "compare": "tsx cli/compare.ts",
+    "fixtures": "tsx cli/fixtures.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.all.json --noEmit",
+    "play": "vite",
+    "play:build": "vite build",
+    "play:preview": "vite preview",
+    "verify": "tsx tests/playground.e2e.ts",
+    "ramp": "tsx cli/ramp.ts",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "verify:mobile": "tsx tests/mobile.e2e.ts"
+  },
+  "dependencies": {
+    "next": "^16.3.3",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.0.8",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "playwright": "^1.62.1",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

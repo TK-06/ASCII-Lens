@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "src",
+    "app",
+    "components",
+    "lib",
+    "cli",
+    "tests",
+    "playground",
+    "next-env.d.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "next.config.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist-playground"
+  ]
+}

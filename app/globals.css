@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+/* ============================================================
+   RISOGRAPH
+   Two spot inks on newsprint. Riso is itself a dithering process
+   working from a limited palette — the same operation this tool
+   performs on a photograph — so the identity and the subject are
+   the same idea.
+   ============================================================ */
+
+@theme {
+  --color-paper: #efece4;
+  --color-stage: #e7e3d8;
+  --color-field: #f6f4ee;
+  --color-ink: #13161c;
+  --color-muted: #5d6068;
+  --color-rule: #cbc6b8;
+
+  /* the two press inks */
+  --color-blue: #0e5fd8;
+  --color-blue-deep: #0a48a4;
+  --color-orange: #ff4b12;
+  --color-orange-deep: #d63b0a;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-art: Consolas, "Cascadia Mono", "DejaVu Sans Mono", "Liberation Mono",
+    ui-monospace, monospace;
+
+  /* the press keyline, used everywhere instead of a border radius */
+  --keyline: 2.5px;
+}
+
+/* A single committed look. No dark mode: newsprint has one colour, and a
+   "dark riso" would be a different design wearing this one's name. The
+   background is painted explicitly so the page holds on any host ground. */
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------- the halftone screen ----------
+   4px dot grid over the stage. This is the texture that says "printed"
+   rather than "rendered", and it is the one decorative element in the
+   whole interface. */
+.halftone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(var(--color-ink) 0.6px, transparent 0.7px);
+  background-size: 4px 4px;
+  opacity: 0.14;
+}
+
+/* ---------- press furniture ---------- */
+
+.keyline {
+  border: var(--keyline) solid var(--color-ink);
+}
+
+/* Depth by displacement, never by blur — exactly how a second ink pass
+   sits fractionally off-register from the first. */
+.drop-ink {
+  box-shadow: 7px 7px 0 var(--color-ink);
+}
+.drop-blue {
+  box-shadow: 6px 6px 0 var(--color-blue);
+}
+.drop-orange {
+  box-shadow: 6px 6px 0 var(--color-orange);
+}
+.drop-sm {
+  box-shadow: 3px 3px 0 var(--color-ink);
+}
+
+/* Pressing a control moves it into its own shadow, like paper under a
+   platen. Cheaper and more physical than a colour change. */
+.press {
+  transition: transform 90ms steps(2, end), box-shadow 90ms steps(2, end);
+}
+.press:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-ink);
+}
+
+/* Keyboard focus has to survive on newsprint, so it is an offset ring in the
+   second ink rather than a subtle glow. */
+:where(button, input, select, [tabindex]):focus-visible {
+  outline: var(--keyline) solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+/* ---------- misregistration wordmark ----------
+   The logo is printed twice, a hair out of alignment, in both inks. */
+.misreg {
+  position: relative;
+  display: inline-block;
+}
+.misreg::before,
+.misreg::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.misreg::before {
+  color: var(--color-orange);
+  transform: translate(-1.5px, 1px);
+  mix-blend-mode: multiply;
+}
+.misreg::after {
+  color: var(--color-blue);
+  transform: translate(1.5px, -1px);
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+/* ---------- range inputs ----------
+   Square knob in the second ink, hard track, no gradients. */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 18px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 7px;
+  background: var(--color-field);
+  border: 2px solid var(--color-ink);
+}
+input[type="range"]::-moz-range-track {
+  height: 7px;
+  background: var(--color-field);
+  border: 2px solid var(--color-ink);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  /* Centre on the 7px track: (7 - 14) / 2. */
+  margin-top: -3.5px;
+  background: var(--color-orange);
+  border: 2px solid var(--color-ink);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
+  background: var(--color-orange);
+  border: 2px solid var(--color-ink);
+}
+
+input[type="range"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   TOUCH
+   Scoped to coarse pointers so the desktop bar stays compact.
+   Two separate problems are being solved here:
+   1. Apple and Android both put the minimum comfortable target at
+      44px; the desktop controls are 18-29px.
+   2. iOS Safari zooms the entire page when a form control smaller
+      than 16px receives focus, which is disorienting and cannot be
+      undone without a pinch.
+   ============================================================ */
+@media (pointer: coarse) {
+  button,
+  [role="tab"],
+  [role="switch"] {
+    min-height: 44px;
+  }
+
+  select {
+    min-height: 44px;
+    font-size: 16px;
+    padding-right: 30px;
+  }
+
+  input[type="range"] {
+    height: 44px;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track,
+  input[type="range"]::-moz-range-track {
+    height: 10px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    width: 26px;
+    height: 26px;
+    margin-top: -8px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* ---------- output ---------- */
+
+pre.art {
+  font-family: var(--font-art);
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+  margin: 0;
+}
+
+pre.art i {
+  font-style: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .press:active:not(:disabled) {
+    transform: none;
+  }
+}
